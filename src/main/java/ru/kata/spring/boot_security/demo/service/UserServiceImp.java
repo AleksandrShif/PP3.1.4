@@ -7,12 +7,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.entity.Role;
 import ru.kata.spring.boot_security.demo.repository.RoleRepository;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
 import ru.kata.spring.boot_security.demo.entity.User;
+
 import javax.annotation.PostConstruct;
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,14 +35,14 @@ public class UserServiceImp implements UserService {
     public void add(User user) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRoleSet(Collections.singleton(roleRepository.getRoleById(2L)));
         userRepository.saveAndFlush(user);
+        System.out.println("User added");
     }
 
     @PostConstruct
     public void add() {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        User user = new User("Maria", "Petrova", 31, "masha", "1111");
+        User user = new User("Masha", "Ivanova", 22, "Masha", "1111");
         Role role1 = roleRepository.saveAndFlush(new Role("ROLE_ADMIN"));
         Role role2 = roleRepository.saveAndFlush(new Role("ROLE_USER"));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -55,10 +56,10 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public void update(User user, Set<Role> roleSet) {
-        user.setRoleSet(roleSet);
+    public void update(User user) {
         userRepository.saveAndFlush(user);
     }
+
 
     @Override
     public List<User> listUsers() {

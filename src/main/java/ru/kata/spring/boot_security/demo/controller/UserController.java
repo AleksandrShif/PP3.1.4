@@ -50,41 +50,4 @@ public class UserController {
         model.addAttribute("principal", userService.getUserByUsername(principal.getName()));
         return "user";
     }
-
-
-
-    @PostMapping("admin/user/new")
-    public String addUser(@ModelAttribute("user") User user, @RequestParam("newUserRoles") String[] roles) {
-        try {
-            Set<Role> roleSet = Arrays.stream(roles)
-                    .map(roleService::getRoleByName)
-                    .collect(Collectors.toSet());
-
-            user.setRoleSet(roleSet);
-            userService.add(user);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return "redirect:/admin";
-    }
-
-
-    @PatchMapping("/admin/user/edit")
-    public String editUser(@ModelAttribute("user") User user, @RequestParam("allRoles[]") String[] roles) {
-        try {
-            Set<Role> roleSet = Arrays.stream(roles)
-                    .map(roleService::getRoleByName)
-                    .collect(Collectors.toSet());
-            userService.update(user, roleSet);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return "redirect:/admin";
-    }
-
-    @DeleteMapping("admin/user/{id}")
-    public String deleteUser(@PathVariable("id") long id) {
-        userService.delete(userService.getUserById(id));
-        return "redirect:/admin";
-    }
 }

@@ -7,12 +7,12 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import java.util.Collection;
 import java.util.Set;
 
 @Entity
 @Table(name = "users")
-@Check(constraints = "age > 0")
 public class User implements UserDetails {
 
     @Id
@@ -26,6 +26,7 @@ public class User implements UserDetails {
     private String lastname;
 
     @Column(name = "age")
+    @Min(value = 0)
     private int age;
 
     @Column(name = "username")
